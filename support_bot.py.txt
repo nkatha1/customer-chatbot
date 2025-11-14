@@ -1,0 +1,110 @@
+import os
+import sys
+import json
+import uuid
+import difflib
+import datetime
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FAQ_PATH = os.path.join(BASE_DIR, "faqs.json")
+TICKETS_PATH = os.path.join(BASE_DIR, "tickets.json")
+LOG_DIR = os.path.join(BASE_DIR, "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+
+DEFAULT_FAQS = [
+    {"id": "faq_1", "q": "How do I reset my password?",
+     "a": "Go to Settings → Account → Reset Password. You will receive an email with instructions."},
+    {"id": "faq_2", "q": "What are your support hours?",
+     "a": "Support is available Monday to Friday, 9:00 AM to 5:00 PM."},
+    {"id": "faq_3", "q": "How can I request a refund?",
+     "a": "Refunds take 5–10 business days. Please provide your order ID in a support ticket."}
+]
+
+SIMILARITY_THRESHOLD = 0.6
+
+def load_faqs():
+    if not os.path.exists(FAQ_PATH):
+        with open(FAQ_PATH, "w") as f:
+            json.dump(DEFAULT_FAQS, f, indent=2)
+    with open(FAQ_PATH, "r") as f:
+        return json.load(f)
+
+def save_faqs(faqs):
+    with open(FAQ_PATH, "w") as f:
+        json.dump(faqs, f, indent=2)
+
+def load_tickets():
+    if not os.path.exists(TICKETS_PATH):
+        with open(TICKETS_PATH, "w") as f:
+            json.dump([], f)
+    with open(TICKETS_PATH, "r") as f:
+        return json.load(f)
+
+def save_tickets(tickets):
+    with open(TICKETS_PATH, "w") as f:
+        json.dump(tickets, f, indent=2)
+
+def best_faq_match(text, faqs):
+    scores = []
+    for f in faqs:
+        score = difflib.SequenceMatcher(None, text.lower(), f["q"].lower()).ratio()
+        scores.append((score, f))
+    scores.sort(reverse=True, key=lambda x: x[0])
+    return scores[0]
+
+def create_ticket(description):
+    tickets = load_tickets()
+    ticket_id = str(uuid.uuid4())[:8]
+    ticket = {
+        "id": ticket_id,
+        "description": description,
+        "status": "open",
+        "created_at": datetime.datetime.utcnow().isoformat() + "Z"
+    }
+    tickets.append(ticket)
+    save_tickets(tickets)
+    return ticket
+
+def main():
+    print("SupportBot is running. Type 'help' for commands.")
+
+    while True:
+        user_input = input("\nYou: ").strip().lower()
+
+        if user_input in ("exit", "quit"):
+            print("Goodbye!")
+            sys.exit()
+
+        if user_input == "help":
+            print("\nCommands:")
+            print(" help       - show available commands")
+            print(" faq        - show common FAQ questions")
+            print(" ticket     - create a support ticket")
+            print(" exit/quit  - close the chatbot")
+            continue
+
+        if user_input == "faq":
+            faqs = load_faqs()
+            print("\nFAQ QUESTIONS:")
+            for f in faqs:
+                print(" -", f["q"])
+            continue
+
+        if user_input == "ticket":
+            desc = input("Describe your issue: ")
+            t = create_ticket(desc)
+            print(f"Ticket created! Ticket ID: {t['id']}")
+            continue
+
+        # Try matching a FAQ
+        faqs = load_faqs()
+        score, faq = best_faq_match(user_input, faqs)
+
+        if score >= SIMILARITY_THRESHOLD:
+            print("\nAnswer:", faq["a"])
+        else:
+            print("\nI’m not sure about that.")
+            print("You can type 'faq' or create a ticket using 'ticket'.")
+
+if __name__ == "__main__":
+    main()

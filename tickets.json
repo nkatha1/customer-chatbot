@@ -1,0 +1,50 @@
+[
+  {
+    "id": "TCK-0001",
+    "description": "my account cannot login",
+    "status": "open",
+    "created_at": "2025-11-14 04:55:57"
+  },
+  {
+    "id": "TCK-0002",
+    "description": "refund not processed",
+    "status": "open",
+    "created_at": "2025-11-14 04:56:46"
+  },
+  {
+    "id": "TCK-0003",
+    "description": "app crashes on startup",
+    "status": "open",
+    "created_at": "2025-11-14 04:57:00"
+  },
+  {
+    "id": "TCK-0004",
+    "description": "has a delay",
+    "status": "open",
+    "created_at": "2025-11-14 04:57:11"
+  },
+  {
+    "id": "TCK-0005",
+    "description": "password",
+    "status": "open",
+    "created_at": "2025-11-14 04:57:32"
+  },
+  {
+    "id": "TCK-0006",
+    "description": "my account cannot log in",
+    "status": "open",
+    "created_at": "2025-11-14 05:02:10"
+  },
+  {
+    "id": "TCK-0007",
+    "description": "i forgot my pasword",
+    "status": "open",
+    "created_at": "2025-11-14 05:08:21"
+  },
+  {
+    "id": "TCK-0008",
+    "description": "i forgot my password",
+    "status": "open",
+    "created_at": "2025-11-14 05:08:48"
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": "faq_1",
+    "q": "How do I reset my password?",
+    "a": "Go to Settings \u2192 Account \u2192 Reset Password. You will receive an email with instructions."
+  },
+  {
+    "id": "faq_2",
+    "q": "What are your support hours?",
+    "a": "Support is available Monday to Friday, 9:00 AM to 5:00 PM."
+  },
+  {
+    "id": "faq_3",
+    "q": "How can I request a refund?",
+    "a": "Refunds take 5\u201310 business days. Please provide your order ID in a support ticket."
+  }
+]
